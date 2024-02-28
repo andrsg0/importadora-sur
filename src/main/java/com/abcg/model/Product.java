@@ -1,6 +1,12 @@
 package com.abcg.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "productos")
 public class Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
     private String description;
@@ -8,13 +14,17 @@ public class Product {
     private double price;
     private int quantity;
 
-    public Product(Integer id, String name, String description, String image, double price, int quantity) {
+    @ManyToOne
+    private User user;
+
+    public Product(Integer id, String name, String description, String image, double price, int quantity, User user) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.image = image;
         this.price = price;
         this.quantity = quantity;
+        this.user = user;
     }
 
     public Product() {
@@ -62,6 +72,14 @@ public class Product {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void setQuantity(int quantity) {

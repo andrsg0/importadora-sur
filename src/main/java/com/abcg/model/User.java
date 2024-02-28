@@ -1,6 +1,14 @@
 package com.abcg.model;
 
+import jakarta.persistence.*;
+
+import java.util.List;
+
+@Entity
+@Table(name = "usuarios")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
     private String username;
@@ -9,6 +17,12 @@ public class User {
     private String telephone;
     private String type;
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    private List<Product> products;
+
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders;
 
     public User(Integer id, String name, String username, String email, String direction, String telephone, String type, String password) {
         this.id = id;
@@ -82,6 +96,14 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 
     public void setPassword(String password) {
