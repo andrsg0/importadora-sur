@@ -52,11 +52,11 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+        <tr th:each="p:${products}">
+            <td th:text="${p.name}"></td>
+            <td th:text="${p.description}"></td>
+            <td th:text="${p.quantity}"></td>
+            <td th:text="${p.price}"></td>
             <td><a class="btn btn-warning" href="">Editar</a></td>
             <td><a class="btn btn-danger" href="">Eliminar</a></td>
         </tr>
