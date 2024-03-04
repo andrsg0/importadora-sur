@@ -21,7 +21,7 @@ public class ProductController {
     private final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
     @Autowired
-    private UploadFileService uplload;
+    private UploadFileService upload;
 
     @Autowired
     private ProductService productService;
@@ -44,17 +44,10 @@ public class ProductController {
 
         // Imagen
         if (product.getId() == null){ // Cuando se crea un producto
-            String nameImage = uplload.saveImage(file);
+
+            String nameImage = upload.saveImage(file);
+            LOGGER.info("Nombre de la imagen: {}",nameImage);
             product.setImage(nameImage);
-        }else{
-            if(file.isEmpty()){ // Editamos el producto pero no cambiamos la imagen
-                Product p = new Product();
-                p = productService.get(product.getId()).get();
-                product.setImage(p.getImage());
-            }else{
-                String nameImage = uplload.saveImage(file);
-                product.setImage(nameImage);
-            }
         }
 
         productService.save(product);
@@ -75,12 +68,34 @@ public class ProductController {
     }
 
     @PostMapping("/actualizar")
-    public String update(Product product){
+    public String update(Product product, @RequestParam("img") MultipartFile file) throws IOException {
+        Product p = new Product();
+        p = productService.get(product.getId()).get();
+
+        if(file.isEmpty()){ // Editamos el producto pero no cambiamos la imagen
+
+            product.setImage(p.getImage());
+        }else{
+            //Eliminar cuando no sea la imagen por defecto
+            if(p.getImage().equals("default.jpg")){
+                upload.deleteImage(p.getImage());
+            }
+            String nameImage = upload.saveImage(file);
+            product.setImage(nameImage);
+        }
+        product.setUser(p.getUser());
         productService.update(product);
         return "redirect:/productos";
     }
     @GetMapping("/eliminar/{id}")
     public String delete(@PathVariable Integer id){
+        Product p = new Product();
+        p = productService.get(id).get();
+
+        //Eliminar cuando no sea la imagen por defecto
+        if(p.getImage().equals("default.jpg")){
+            upload.deleteImage(p.getImage());
+        }
         productService.delete(id);
         return "redirect:/productos";
     }

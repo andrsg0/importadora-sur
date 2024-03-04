@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 public class UploadFileService {
     private String folder = "images//";
     public String saveImage(MultipartFile file) throws IOException {
-        if(file.isEmpty()){
+        if(!file.isEmpty()){
             byte [] bytes = file.getBytes();
             Path path = Paths.get(folder+file.getOriginalFilename());
             Files.write(path, bytes);
@@ -23,7 +23,7 @@ public class UploadFileService {
     }
 
     public void deleteImage(String nombre){
-        String ruta = "iamges//";
+        String ruta = "images//";
         File file = new File(ruta+nombre);
         file.delete();
     }
