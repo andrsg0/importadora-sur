@@ -13,7 +13,7 @@ public class User {
     private String name;
     private String username;
     private String email;
-    private String direction;
+    private String address;
     private String telephone;
     private String type;
     private String password;
@@ -24,12 +24,12 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Order> orders;
 
-    public User(Integer id, String name, String username, String email, String direction, String telephone, String type, String password) {
+    public User(Integer id, String name, String username, String email, String address, String telephone, String type, String password) {
         this.id = id;
         this.name = name;
         this.username = username;
         this.email = email;
-        this.direction = direction;
+        this.address = address;
         this.telephone = telephone;
         this.type = type;
         this.password = password;
@@ -70,12 +70,12 @@ public class User {
         this.email = email;
     }
 
-    public String getDirection() {
-        return direction;
+    public String getAddress() {
+        return address;
     }
 
-    public void setDirection(String direction) {
-        this.direction = direction;
+    public void setAddress(String direction) {
+        this.address = direction;
     }
 
     public String getTelephone() {
