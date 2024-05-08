@@ -4,6 +4,7 @@ import com.abcg.model.Order;
 import com.abcg.model.OrderDetail;
 import com.abcg.model.Product;
 import com.abcg.service.ProductService;
+import org.aspectj.weaver.ast.Or;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +76,30 @@ public class HomeController {
         model.addAttribute("order", order);
 
 
+
+        return "user/cart";
+    }
+
+    //Quitar un producto del carrito
+    @GetMapping("/delete/cart/{id}")
+    public String deleteProductCart(@PathVariable Integer id, Model model){
+        List<OrderDetail> newOrders = new ArrayList<OrderDetail>();
+
+        for(OrderDetail orderDetail : details){
+            if(orderDetail.getProduct().getId()!=id){
+                newOrders.add(orderDetail);
+            }
+        }
+
+        details=newOrders;
+
+        double total = 0;
+
+        total = details.stream().mapToDouble(dt -> dt.getTotal()).sum();
+
+        order.setTotal(total);
+        model.addAttribute("cart", details);
+        model.addAttribute("order", order);
 
         return "user/cart";
     }

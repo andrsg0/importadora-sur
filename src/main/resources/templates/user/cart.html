@@ -10,7 +10,6 @@
 
     <title>Spring eCommerce</title>
 
-
     <!-- Bootstrap core CSS -->
     <link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
 
@@ -59,7 +58,7 @@
                             <td th:text="${orderDetail.price}">Precio</td>
                             <td th:text="${orderDetail.quantity}">Cantidad</td>
                             <td th:text="${orderDetail.total}">Total</td>
-                            <td><a href="#" class="btn btn-danger">Quitar</a></td>
+                            <td><a th:href="@{/delete/cart/{id} (id=${orderDetail.product.id})}" class="btn btn-danger">Quitar</a></td>
                         </tr>
                         </tbody>
                     </table>
