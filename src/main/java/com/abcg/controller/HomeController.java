@@ -4,6 +4,8 @@ import com.abcg.model.Order;
 import com.abcg.model.OrderDetail;
 import com.abcg.model.Product;
 import com.abcg.model.User;
+import com.abcg.service.IOrderDetailService;
+import com.abcg.service.IOrderService;
 import com.abcg.service.IProductService;
 import com.abcg.service.IUserService;
 import org.slf4j.Logger;
@@ -14,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +31,13 @@ public class HomeController {
 
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private IOrderService orderService;
+
+    @Autowired
+    private IOrderDetailService orderDetailService;
+
 
     // Store order details
     List<OrderDetail> details = new ArrayList<OrderDetail>();
@@ -129,5 +139,28 @@ public class HomeController {
         model.addAttribute("user", user);
 
         return "user/orderresume";
+    }
+
+    @GetMapping("/saveOrder")
+    public String saveOrder(){
+        Date dtCreation = new Date();
+        order.setDateCreation(dtCreation);
+        order.setNumber(orderService.generateOrderNumber());
+
+        //Usuario
+        User user = userService.findById(1).get();
+        orderService.save(order);
+
+        //Guardar detalles
+        for(OrderDetail dt : details){
+            dt.setOrder(order);
+            orderDetailService.save(dt);
+        }
+
+        //Limpiar lista y orden
+        order = new Order();
+        details.clear();
+
+        return "redirect:/";
     }
 }
