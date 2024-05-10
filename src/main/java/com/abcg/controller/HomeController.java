@@ -3,8 +3,9 @@ package com.abcg.controller;
 import com.abcg.model.Order;
 import com.abcg.model.OrderDetail;
 import com.abcg.model.Product;
-import com.abcg.service.ProductService;
-import org.aspectj.weaver.ast.Or;
+import com.abcg.model.User;
+import com.abcg.service.IProductService;
+import com.abcg.service.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,10 @@ public class HomeController {
     private final Logger log = LoggerFactory.getLogger(HomeController.class);
 
     @Autowired
-    private ProductService productService;
+    private IProductService productService;
+
+    @Autowired
+    private IUserService userService;
 
     // Store order details
     List<OrderDetail> details = new ArrayList<OrderDetail>();
@@ -57,8 +61,8 @@ public class HomeController {
 
         Optional<Product> optionalProduct  = productService.get(id);
 
-        log.info("Id producto añadido: {}", optionalProduct.get());
-        log.info("Cantdad: {}", quantity);
+        //log.info("Id producto añadido: {}", optionalProduct.get());
+        //log.info("Cantdad: {}", quantity);
 
         product = optionalProduct.get();
         orderDetail.setQuantity(quantity);
@@ -69,7 +73,7 @@ public class HomeController {
 
         //Validar que el producto no se añada 2 veces
         Integer idProduct = product.getId();
-        boolean exists = details.stream().anyMatch(p -> p.getProduct().getId()==idProduct);
+        boolean exists = details.stream().anyMatch(p -> p.getProduct().getId() == idProduct);
 
         if(!exists){
             details.add(orderDetail);
@@ -116,7 +120,14 @@ public class HomeController {
     }
 
     @GetMapping("/order")
-    public String order(){
+    public String order(Model model){
+
+        User user = userService.findById(1).get();
+
+        model.addAttribute("cart", details);
+        model.addAttribute("order", order);
+        model.addAttribute("user", user);
+
         return "user/orderresume";
     }
 }

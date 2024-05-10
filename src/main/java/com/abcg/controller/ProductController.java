@@ -2,7 +2,7 @@ package com.abcg.controller;
 
 import com.abcg.model.Product;
 import com.abcg.model.User;
-import com.abcg.service.ProductService;
+import com.abcg.service.IProductService;
 import com.abcg.service.UploadFileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,11 +24,11 @@ public class ProductController {
     private UploadFileService upload;
 
     @Autowired
-    private ProductService productService;
+    private IProductService IProductService;
 
     @GetMapping("")
     public String show(Model model){
-        model.addAttribute("products", productService.findAll());
+        model.addAttribute("products", IProductService.findAll());
         return "products/show";
     }
     @GetMapping("/crear")
@@ -50,14 +50,14 @@ public class ProductController {
             product.setImage(nameImage);
         }
 
-        productService.save(product);
+        IProductService.save(product);
         return "redirect:/productos";
     }
 
     @GetMapping("/editar/{id}")
     public String edit(@PathVariable Integer id, Model model){
         Product product = new Product();
-        Optional<Product> optionalProduct = productService.get(id);
+        Optional<Product> optionalProduct = IProductService.get(id);
         product = optionalProduct.get();
 
         LOGGER.info("Producto buscado: {}", product);
@@ -70,7 +70,7 @@ public class ProductController {
     @PostMapping("/actualizar")
     public String update(Product product, @RequestParam("img") MultipartFile file) throws IOException {
         Product p = new Product();
-        p = productService.get(product.getId()).get();
+        p = IProductService.get(product.getId()).get();
 
         if(file.isEmpty()){ // Editamos el producto pero no cambiamos la imagen
 
@@ -84,19 +84,19 @@ public class ProductController {
             product.setImage(nameImage);
         }
         product.setUser(p.getUser());
-        productService.update(product);
+        IProductService.update(product);
         return "redirect:/productos";
     }
     @GetMapping("/eliminar/{id}")
     public String delete(@PathVariable Integer id){
         Product p = new Product();
-        p = productService.get(id).get();
+        p = IProductService.get(id).get();
 
         //Eliminar cuando no sea la imagen por defecto
         if(p.getImage().equals("default.jpg")){
             upload.deleteImage(p.getImage());
         }
-        productService.delete(id);
+        IProductService.delete(id);
         return "redirect:/productos";
     }
 }

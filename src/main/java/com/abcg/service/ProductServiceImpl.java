@@ -2,40 +2,40 @@ package com.abcg.service;
 
 
 import com.abcg.model.Product;
-import com.abcg.repository.ProductRepository;
+import com.abcg.repository.IProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 @Service
-public class ProductServiceImpl implements ProductService {
+public class ProductServiceImpl implements IProductService {
 
     @Autowired
-    private ProductRepository productRepository;
+    private IProductRepository IProductRepository;
 
     @Override
     public Product save(Product product) {
-        return productRepository.save(product);
+        return IProductRepository.save(product);
     }
 
     @Override
     public Optional<Product> get(Integer id) {
-        return productRepository.findById(id);
+        return IProductRepository.findById(id);
     }
 
     @Override
     public void update(Product product) {
-        productRepository.save(product);
+        IProductRepository.save(product);
     }
 
     @Override
     public void delete(Integer id) {
-        productRepository.deleteById(id);
+        IProductRepository.deleteById(id);
     }
 
     @Override
     public List<Product> findAll() {
-        return productRepository.findAll();
+        return IProductRepository.findAll();
     }
 }
