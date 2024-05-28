@@ -3,6 +3,7 @@ package com.abcg.model;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "ordenes")
@@ -18,8 +19,8 @@ public class Order {
     @ManyToOne
     private User user;
 
-    @OneToOne(mappedBy = "order")
-    private OrderDetail detail;
+    @OneToMany(mappedBy = "order")
+    private List<OrderDetail> detail;
     public Order() {
     }
 
@@ -59,6 +60,10 @@ public class Order {
         return dateReceived;
     }
 
+    public void setDateReceived(Date dateReceived) {
+        this.dateReceived = dateReceived;
+    }
+
     public double getTotal() {
         return total;
     }
@@ -75,15 +80,11 @@ public class Order {
         this.user = user;
     }
 
-    public OrderDetail getDetail() {
+    public List<OrderDetail> getDetail() {
         return detail;
     }
 
-    public void setDetail(OrderDetail detail) {
+    public void setDetail(List<OrderDetail> detail) {
         this.detail = detail;
-    }
-
-    public void setDateReceived(Date dateReceived) {
-        this.dateReceived = dateReceived;
     }
 }

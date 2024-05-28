@@ -3,7 +3,10 @@ package com.abcg.controller;
 import com.abcg.model.Product;
 import com.abcg.model.User;
 import com.abcg.service.IProductService;
+import com.abcg.service.IUserService;
 import com.abcg.service.UploadFileService;
+import com.abcg.service.UserServiceImpl;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,9 @@ public class ProductController {
     @Autowired
     private IProductService IProductService;
 
+    @Autowired
+    private IUserService userService;
+
     @GetMapping("")
     public String show(Model model){
         model.addAttribute("products", IProductService.findAll());
@@ -37,9 +43,9 @@ public class ProductController {
     }
 
     @PostMapping("/guardar")
-    public String save(Product product, @RequestParam("img") MultipartFile file) throws IOException {
+    public String save(Product product, @RequestParam("img") MultipartFile file, HttpSession session) throws IOException {
         LOGGER.info("Este es el objeto producto {}", product);
-        User u = new User(1,"","","","","","","");
+        User u = userService.findById(Integer.parseInt(session.getAttribute("iduser").toString())).get();
         product.setUser(u);
 
         // Imagen

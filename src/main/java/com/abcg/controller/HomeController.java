@@ -8,6 +8,7 @@ import com.abcg.service.IOrderDetailService;
 import com.abcg.service.IOrderService;
 import com.abcg.service.IProductService;
 import com.abcg.service.IUserService;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,8 @@ public class HomeController {
 
 
     @GetMapping("")
-    public String home(Model model){
+    public String home(Model model, HttpSession session){
+        log.info("Sesion del usuario: {}", session.getAttribute("iduser"));
         model.addAttribute("products", productService.findAll());
         return "user/home";
     }
@@ -131,9 +133,9 @@ public class HomeController {
     }
 
     @GetMapping("/order")
-    public String order(Model model){
+    public String order(Model model, HttpSession session){
 
-        User user = userService.findById(1).get();
+        User user = userService.findById(Integer.parseInt(session.getAttribute("iduser").toString())).get();
 
         model.addAttribute("cart", details);
         model.addAttribute("order", order);
@@ -143,13 +145,13 @@ public class HomeController {
     }
 
     @GetMapping("/saveOrder")
-    public String saveOrder(){
+    public String saveOrder(HttpSession session){
         Date dtCreation = new Date();
         order.setDateCreation(dtCreation);
         order.setNumber(orderService.generateOrderNumber());
 
         //Usuario
-        User user = userService.findById(1).get();
+        User user = userService.findById(Integer.parseInt(session.getAttribute("iduser").toString())).get();
         orderService.save(order);
 
         //Guardar detalles
