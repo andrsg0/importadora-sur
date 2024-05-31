@@ -1,6 +1,7 @@
 package com.abcg.service;
 
 import com.abcg.model.Order;
+import com.abcg.model.User;
 import com.abcg.repository.IOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,5 +53,10 @@ public class OrderServiceImpl implements IOrderService{
             concatNumber = "00000"+String.valueOf(num);
         }
         return concatNumber;
+    }
+
+    @Override
+    public List<Order> findByUser(User user) {
+        return orderRepository.findByUser(user);
     }
 }
