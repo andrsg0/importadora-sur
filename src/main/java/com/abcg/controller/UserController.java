@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -69,10 +70,19 @@ public class UserController {
 
     @GetMapping("/purchases")
     public String getPurchases(Model model, HttpSession session) {
-        model.addAttribute("session", session.getAttribute("iduser"));
+        model.addAttribute("sessionu", session.getAttribute("iduser"));
         User user = userService.findById(Integer.parseInt(session.getAttribute("iduser").toString())).get();
         List<Order> orders = orderService.findByUser(user);
         model.addAttribute("orders", orders);
         return "user/purchases";
+    }
+
+    @GetMapping("/details/{id}")
+    public String purchaseDetail(@PathVariable Integer id, HttpSession session, Model model){
+        logger.info("Id de la orden: {}", id);
+        Optional<Order> order = orderService.findById(id);
+        model.addAttribute("details", order.get().getDetail());
+        model.addAttribute("sessionu", session.getAttribute("iduser"));
+        return "user/detail";
     }
 }

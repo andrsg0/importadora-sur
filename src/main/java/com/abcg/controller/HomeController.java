@@ -53,7 +53,7 @@ public class HomeController {
         model.addAttribute("products", productService.findAll());
 
         //Session
-        model.addAttribute("session", session.getAttribute("iduser"));
+        model.addAttribute("sessionu", session.getAttribute("iduser"));
         return "user/home";
     }
 
@@ -134,7 +134,7 @@ public class HomeController {
         model.addAttribute("cart", details);
         model.addAttribute("order", order);
         //Session
-        model.addAttribute("session", session.getAttribute("iduser"));
+        model.addAttribute("sessionu", session.getAttribute("iduser"));
         return "/user/cart";
     }
 
