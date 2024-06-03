@@ -8,13 +8,13 @@ import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.service.annotation.GetExchange;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +30,8 @@ public class UserController {
     @Autowired
     private IOrderService orderService;
 
+    BCryptPasswordEncoder passEncode = new BCryptPasswordEncoder();
+
     @GetMapping("/signup")
     public String create() {
         return "/user/sign_up";
@@ -39,6 +41,7 @@ public class UserController {
     public String save(User user) {
         logger.info("Usuario registro: {}", user);
         user.setType("USER");
+        user.setPassword(passEncode.encode(user.getPassword()));
         userService.save(user);
         return "redirect:/";
     }
@@ -48,12 +51,12 @@ public class UserController {
         return "user/login";
     }
 
-    @PostMapping("/access")
+    @GetMapping("/access")
     public String access(User user, HttpSession session) {
         logger.info("Accesos: {}", user);
 
-        Optional<User> userOptional = userService.findByEmail(user.getEmail());
-        //logger.info("Usuario de db: {}", userOptional.get());
+        Optional<User> userOptional = userService.findById(Integer.parseInt(session.getAttribute("iduser").toString()));
+        logger.info("Usuario de db: {}", userOptional.get());
 
         if (userOptional.isPresent()) {
             session.setAttribute("iduser", userOptional.get().getId());
